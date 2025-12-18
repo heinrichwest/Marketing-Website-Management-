@@ -1,9 +1,6 @@
-"use client"
-
 import { useState } from "react"
-import Link from "next/link"
+import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "@/context/auth-context"
-import { useRouter } from "next/navigation"
 import type { UserRole } from "@/types"
 import RoleBadge from "./role-badge"
 
@@ -32,7 +29,7 @@ const ROLES: { value: UserRole; label: string; description: string }[] = [
 
 export default function RoleSwitcher({ className }: { className?: string }) {
   const { user, switchRole } = useAuth()
-  const router = useRouter()
+  const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
 
   if (!user) return null
@@ -43,9 +40,9 @@ export default function RoleSwitcher({ className }: { className?: string }) {
 
     // Redirect to appropriate dashboard based on role
     if (newRole === "admin") {
-      router.push("/admin/dashboard")
+      navigate("/admin/dashboard")
     } else {
-      router.push("/dashboard")
+      navigate("/dashboard")
     }
   }
 
@@ -110,7 +107,7 @@ export default function RoleSwitcher({ className }: { className?: string }) {
 
               <div className="mt-2 pt-2 border-t border-border">
                 <Link
-                  href="/switch-role"
+                  to="/switch-role"
                   className="flex items-center justify-center gap-2 w-full p-3 rounded-lg bg-gradient-to-r from-[#1e2875] to-[#2a3488] text-white hover:from-[#2a3488] hover:to-[#1e2875] transition"
                   onClick={() => setIsOpen(false)}
                 >

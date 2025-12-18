@@ -1,4 +1,3 @@
-"use client"
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import type { UserRole, User, Project, Ticket } from "@/types"
 import { getUserById, getProjectsByUserId, initializeMockData } from "@/lib/mock-data"

@@ -1,11 +1,9 @@
-"use client"
-
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
-import Link from "next/link"
+import { Link } from "react-router-dom"
 import { useAuth } from "@/context/auth-context"
 
-export default function Home() {
+export default function HomePage() {
   const { isSignedIn } = useAuth()
 
   return (
@@ -36,13 +34,13 @@ export default function Home() {
 
             <div className="flex gap-4 justify-center flex-wrap">
               <Link
-                href={isSignedIn ? "/dashboard" : "/register"}
+                to={isSignedIn ? "/dashboard" : "/register"}
                 className="bg-white text-primary px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition"
               >
                 {isSignedIn ? "Go to Dashboard" : "Get Started"}
               </Link>
               <Link
-                href="/login"
+                to="/login"
                 className="bg-primary text-white px-8 py-3 rounded-lg font-bold hover:bg-primary/90 transition border-2 border-white"
               >
                 Sign In
@@ -164,13 +162,13 @@ export default function Home() {
 
             <div className="flex gap-4 justify-center flex-wrap">
               <Link
-                href={isSignedIn ? "/dashboard" : "/register"}
+                to={isSignedIn ? "/dashboard" : "/register"}
                 className="bg-white text-primary px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition"
               >
                 {isSignedIn ? "Go to Dashboard" : "Get Started Now"}
               </Link>
               <Link
-                href="/login"
+                to="/login"
                 className="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-white/10 transition"
               >
                 Sign In

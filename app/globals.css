@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -75,7 +76,7 @@
 }
 
 @theme inline {
-  --font-sans: "Inter", "Inter Fallback";
+  --font-sans: "Roboto", sans-serif;
 
   /* Primary brand color - Dark Blue */
   --color-primary: #12265E;

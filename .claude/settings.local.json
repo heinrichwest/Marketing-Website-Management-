@@ -21,7 +21,12 @@
       "Bash(cp:*)",
       "Bash(git commit:*)",
       "Bash(gh --version:*)",
-      "Bash(git remote:*)"
+      "Bash(git remote:*)",
+      "Bash(if exist next.config.js del next.config.js)",
+      "Bash(if exist next.config.mjs del next.config.mjs)",
+      "Bash(if exist next.config.ts del next.config.ts)",
+      "Bash(if exist next-env.d.ts del next-env.d.ts)",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []
