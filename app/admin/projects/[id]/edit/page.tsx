@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { useRouter, useParams } from "next/navigation"
+import Link from "next/link"
 import { useAuth } from "@/context/auth-context"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
-import { getProjectById, getUsers } from "@/lib/mock-data"
+import { getProjectById, getUsers, updateProject } from "@/lib/mock-data"
 import type { Project, User, ProjectStage, ProjectStatus } from "@/types"
 
 export default function EditProjectPage() {
@@ -69,24 +70,25 @@ export default function EditProjectPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    // In a real app, this would update the database
-    // For now, we'll just update localStorage
-    const projects = JSON.parse(localStorage.getItem("marketing_management_website_projects") || "[]")
-    const projectIndex = projects.findIndex((p: Project) => p.id === projectId)
+    const updated = updateProject(projectId, {
+      name: formData.name,
+      description: formData.description,
+      websiteUrl: formData.websiteUrl,
+      googleAnalyticsPropertyId: formData.googleAnalyticsPropertyId,
+      googleAnalyticsViewId: formData.googleAnalyticsViewId,
+      clientId: formData.clientId,
+      webDeveloperId: formData.webDeveloperId || undefined,
+      socialMediaCoordinatorId: formData.socialMediaCoordinatorId || undefined,
+      currentStage: formData.currentStage,
+      status: formData.status,
+      notes: formData.notes,
+    })
 
-    if (projectIndex !== -1) {
-      projects[projectIndex] = {
-        ...projects[projectIndex],
-        ...formData,
-        webDeveloperId: formData.webDeveloperId || undefined,
-        socialMediaCoordinatorId: formData.socialMediaCoordinatorId || undefined,
-        updatedAt: new Date(),
-      }
-
-      localStorage.setItem("marketing_management_website_projects", JSON.stringify(projects))
-
+    if (updated) {
       alert("Project updated successfully!")
       router.push("/admin/dashboard")
+    } else {
+      alert("Failed to update project")
     }
   }
 

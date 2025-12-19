@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Navbar from "@/components/navbar"
@@ -10,11 +10,18 @@ import { getProjects, getTickets, getUsers } from "@/lib/mock-data"
 import StatCard from "@/components/stat-card"
 import StatusBadge from "@/components/status-badge"
 import PriorityBadge from "@/components/priority-badge"
+import EditProjectModal from "@/components/edit-project-modal"
+import ViewTicketsModal from "@/components/view-tickets-modal"
 import { getStageDisplayName, formatRelativeTime } from "@/lib/utils"
+import type { Project } from "@/types"
 
 export default function AdminDashboard() {
   const { isSignedIn, user } = useAuth()
   const router = useRouter()
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [isTicketsModalOpen, setIsTicketsModalOpen] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
     if (!isSignedIn) {
@@ -35,6 +42,22 @@ export default function AdminDashboard() {
   const projects = getProjects()
   const tickets = getTickets()
   const users = getUsers()
+
+  const handleEditClick = (project: Project) => {
+    console.log("Edit clicked for project:", project.name)
+    setSelectedProject(project)
+    setIsEditModalOpen(true)
+  }
+
+  const handleViewTicketsClick = (project: Project) => {
+    console.log("View tickets clicked for project:", project.name)
+    setSelectedProject(project)
+    setIsTicketsModalOpen(true)
+  }
+
+  const handleEditSuccess = () => {
+    setRefreshKey((prev) => prev + 1)
+  }
 
   const stats = {
     totalProjects: projects.length,
@@ -224,12 +247,17 @@ export default function AdminDashboard() {
                             <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-800 font-semibold text-sm">
                               {ticketCount}
                             </span>
-                            <Link
-                              href={`/tickets?project=${project.id}`}
-                              className="text-xs text-primary hover:underline"
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                handleViewTicketsClick(project)
+                              }}
+                              className="text-xs text-primary hover:underline cursor-pointer"
                             >
                               View
-                            </Link>
+                            </button>
                           </div>
                         </td>
                         <td className="px-4 py-3">
@@ -256,12 +284,17 @@ export default function AdminDashboard() {
                             >
                               View
                             </Link>
-                            <Link
-                              href={`/admin/projects/${project.id}/edit`}
-                              className="text-xs text-primary hover:underline"
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                handleEditClick(project)
+                              }}
+                              className="text-xs text-primary hover:underline cursor-pointer"
                             >
                               Edit
-                            </Link>
+                            </button>
                           </div>
                         </td>
                       </tr>
@@ -349,6 +382,25 @@ export default function AdminDashboard() {
           </div>
         </div>
       </main>
+
+      {/* Modals */}
+      <EditProjectModal
+        project={selectedProject}
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false)
+          setSelectedProject(null)
+        }}
+        onSuccess={handleEditSuccess}
+      />
+      <ViewTicketsModal
+        project={selectedProject}
+        isOpen={isTicketsModalOpen}
+        onClose={() => {
+          setIsTicketsModalOpen(false)
+          setSelectedProject(null)
+        }}
+      />
 
       <Footer />
     </>
